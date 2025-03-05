@@ -60,7 +60,7 @@ public partial class MainWindow : Window
         tbDialogue.Text = dialogueMessage;
         tbWord.Text = word;
         tbxGuessInput.Visibility = Visibility.Visible;
-        tbguessedLetters.Text = "Guessed Letters: ";
+        tbguessedLetters.Text = "Guessed letters: ";
     }
     static string RandomWord(string[] wordList, Random random)
     {
