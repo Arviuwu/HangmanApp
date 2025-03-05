@@ -9,6 +9,7 @@ namespace HangmanApp;
 /// </summary>
 public partial class MainWindow : Window
 {
+    bool open = false;
     List<char> guessedLetters = new List<char>(); // empty list of wrongly guessed characters
     string[] wordList = new string[] // list of possible words
     {
@@ -40,6 +41,7 @@ public partial class MainWindow : Window
     }
     public void InitializeGame()
     {
+        Replay();
         lives = 7;
         guessedLetters.Clear();
         word = RandomWord(wordList, random); //choosing random word
@@ -57,7 +59,8 @@ public partial class MainWindow : Window
         tblives.Text = $"Lives remaining: {lives}";
         tbDialogue.Text = dialogueMessage;
         tbWord.Text = word;
-        
+        tbxGuessInput.Visibility = Visibility.Visible;
+        tbguessedLetters.Text = "Guessed Letters: ";
     }
     static string RandomWord(string[] wordList, Random random)
     {
@@ -134,23 +137,46 @@ public partial class MainWindow : Window
             if (!guessDisplay.Contains("_ "))
             {
                 tbDialogue.Text = "    You won!";
+                tbxGuessInput.Visibility = Visibility.Hidden;
+                Replay();
             }
             else if (lives == 0)
             {
                 tbDialogue.Text = $"    You lost. The word was {oldWord}.";
-                btnReset.Visibility = Visibility.Visible;
-                btnReset.IsEnabled = true;
+                tbxGuessInput.Visibility = Visibility.Hidden;
+                Replay();
             }
         }
     }
     private void Replay()
     {
-
+        
+        if (open == true)
+        {
+            btnReset.Visibility = Visibility.Visible;
+            btnReset.IsEnabled = true;
+            btnExit.Visibility = Visibility.Visible;
+            btnExit.IsEnabled = true;
+            open = false;
+        }
+        else
+        {
+            btnReset.Visibility = Visibility.Hidden;
+            btnReset.IsEnabled = false;
+            btnExit.Visibility = Visibility.Hidden;
+            btnExit.IsEnabled = false;
+            open = true;
+        }
     }
     private void btnReset_Click(object sender, RoutedEventArgs e)
     {
         InitializeGame();
     }
+    private void btnExit_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
 }
 /*static void Main()
     {

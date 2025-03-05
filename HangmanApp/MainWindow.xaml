@@ -11,9 +11,9 @@
         <TextBlock Name="tblives" Text="Lives remaining:" FontSize="30" HorizontalAlignment="Center" Margin="0,51,0,0" TextAlignment="Center" />
         <TextBlock Name="tbguessedLetters" Text="Guessed letters: " FontSize="30" HorizontalAlignment="Center" Margin="0,90,0,0" />
         <TextBlock Name="tbDialogue" Text="Take your guess!" FontSize="30" HorizontalAlignment="Center" Margin="0,120,0,0"/>
-        <TextBox Name="tbxGuessInput" HorizontalAlignment="Center" KeyDown="tbxGuessInput_KeyDown" Width="120" Margin="0,203,0,-83" />
+        <TextBox Name="tbxGuessInput" HorizontalAlignment="Center" KeyDown="tbxGuessInput_KeyDown" Width="120" Margin="0,203,0,-83" TextAlignment="Center"/>
         <Button Name="btnReset" Click="btnReset_Click" Margin="532,253,187,-138" Content="Play again!" IsEnabled="False" Visibility="Hidden"/>
         <Button Name="btnExit" Click="btnExit_Click" Margin="675,253,44,-138" Content="Exit" IsEnabled="False" Visibility="Hidden"/>
-        <TextBlock Name="tbWord" Margin="201,-10,-10,86" />
+        <TextBlock Name="tbWord" Margin="52,29,139,47" />
     </Grid>
 </Window>
