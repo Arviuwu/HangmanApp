@@ -1,15 +1,14 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace HangmanApp;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
 public partial class MainWindow : Window
 {
-    bool open = false;
+    bool open = false; //button visibility switch
     List<char> guessedLetters = new List<char>(); // empty list of wrongly guessed characters
     string[] wordList = new string[] // list of possible words
     {
@@ -26,18 +25,18 @@ public partial class MainWindow : Window
     char letterGuess = '\0';
     int lives = 7;
     Random random = new Random(); //random init
-    bool repeat = true;
     string word;
     string oldWord;
     string[] guessDisplay;
     char[] wordArray;
-    bool alive = true;
     string dialogueMessage;
+    int stage = 0;
 
     public MainWindow()
     {
         InitializeComponent();
         InitializeGame();
+        DrawHangman(stage);
     }
     public void InitializeGame()
     {
@@ -48,7 +47,7 @@ public partial class MainWindow : Window
         guessDisplay = new string[word.Length]; // string array with as many positions as the word is long      
         wordArray = word.ToCharArray(); // word converted to array with characters
         oldWord = word; // store word for loss message
-
+        stage = 0;
         dialogueMessage = "Take your guess!";
         // create guess display array with blanks
         for (int i = 0; i < wordArray.Length; i++)
@@ -106,8 +105,10 @@ public partial class MainWindow : Window
                         guessedLetters.Add(letterGuess);
                         tbguessedLetters.Text = "Guessed letters: " + string.Join(", ", guessedLetters);
                         lives--;
+                        stage++;
                         tblives.Text = $"Lives remaining: {lives}";
                         tbDialogue.Text = dialogueMessage;
+                        DrawHangman(stage);
                     }
                     else if (word.Contains(letterGuess))
                     {
@@ -153,20 +154,18 @@ public partial class MainWindow : Window
         
         if (open == true)
         {
-            btnReset.Visibility = Visibility.Visible;
+           
             btnReset.IsEnabled = true;
-            btnExit.Visibility = Visibility.Visible;
-            btnExit.IsEnabled = true;
-            open = false;
+            
         }
         else
         {
-            btnReset.Visibility = Visibility.Hidden;
+            
             btnReset.IsEnabled = false;
-            btnExit.Visibility = Visibility.Hidden;
-            btnExit.IsEnabled = false;
-            open = true;
+            
+            
         }
+        open = !open;
     }
     private void btnReset_Click(object sender, RoutedEventArgs e)
     {
@@ -176,5 +175,75 @@ public partial class MainWindow : Window
     {
         Close();
     }
+    private void DrawHangman(int stage) //gpt code for dynamic drawing
+    {
+        HangmanCanvas.Children.Clear();
 
+        double canvasWidth = HangmanCanvas.ActualWidth;
+        double canvasHeight = HangmanCanvas.ActualHeight;
+
+        // Define dynamic positions based on canvas size
+        double baseX = canvasWidth * 0.2;
+        double baseY = canvasHeight * 0.9;
+        double standHeight = canvasHeight * 0.6;
+        double topWidth = canvasWidth * 0.3;
+
+        // Draw the stand
+        Line baseLine = new Line { X1 = baseX - 30, Y1 = baseY, X2 = baseX + 100, Y2 = baseY, Stroke = Brushes.Black, StrokeThickness = 5 };
+        Line pole = new Line { X1 = baseX, Y1 = baseY - standHeight, X2 = baseX, Y2 = baseY, Stroke = Brushes.Black, StrokeThickness = 5 };
+        Line top = new Line { X1 = baseX, Y1 = baseY - standHeight, X2 = baseX + topWidth, Y2 = baseY - standHeight, Stroke = Brushes.Black, StrokeThickness = 5 };
+        Line rope = new Line { X1 = baseX + topWidth, Y1 = baseY - standHeight, X2 = baseX + topWidth, Y2 = baseY - standHeight + (canvasHeight * 0.1), Stroke = Brushes.Black, StrokeThickness = 3 };
+
+        HangmanCanvas.Children.Add(baseLine);
+        HangmanCanvas.Children.Add(pole);
+        HangmanCanvas.Children.Add(top);
+        
+        if(stage > 0)
+        {
+            HangmanCanvas.Children.Add(rope);
+        }
+        if (stage > 1) // Head
+        {
+            double headSize = canvasHeight * 0.08;
+            Ellipse head = new Ellipse { Width = headSize, Height = headSize, Stroke = Brushes.Black, StrokeThickness = 3 };
+            Canvas.SetLeft(head, baseX + topWidth - (headSize / 2));
+            Canvas.SetTop(head, baseY - standHeight + (canvasHeight * 0.1));
+            HangmanCanvas.Children.Add(head);
+        }
+
+        if (stage > 2) // Body
+        {
+            Line body = new Line { X1 = baseX + topWidth, Y1 = baseY - standHeight + (canvasHeight * 0.18), X2 = baseX + topWidth, Y2 = baseY - standHeight + (canvasHeight * 0.35), Stroke = Brushes.Black, StrokeThickness = 3 };
+            HangmanCanvas.Children.Add(body);
+        }
+
+        if (stage > 3) // Left Arm
+        {
+            Line leftArm = new Line { X1 = baseX + topWidth, Y1 = baseY - standHeight + (canvasHeight * 0.2), X2 = baseX + topWidth - (canvasWidth * 0.08), Y2 = baseY - standHeight + (canvasHeight * 0.28), Stroke = Brushes.Black, StrokeThickness = 3 };
+            HangmanCanvas.Children.Add(leftArm);
+        }
+
+        if (stage > 4) // Right Arm
+        {
+            Line rightArm = new Line { X1 = baseX + topWidth, Y1 = baseY - standHeight + (canvasHeight * 0.2), X2 = baseX + topWidth + (canvasWidth * 0.08), Y2 = baseY - standHeight + (canvasHeight * 0.28), Stroke = Brushes.Black, StrokeThickness = 3 };
+            HangmanCanvas.Children.Add(rightArm);
+        }
+
+        if (stage > 5) // Left Leg
+        {
+            Line leftLeg = new Line { X1 = baseX + topWidth, Y1 = baseY - standHeight + (canvasHeight * 0.35), X2 = baseX + topWidth - (canvasWidth * 0.06), Y2 = baseY - standHeight + (canvasHeight * 0.45), Stroke = Brushes.Black, StrokeThickness = 3 };
+            HangmanCanvas.Children.Add(leftLeg);
+        }
+
+        if (stage > 6) // Right Leg
+        {
+            Line rightLeg = new Line { X1 = baseX + topWidth, Y1 = baseY - standHeight + (canvasHeight * 0.35), X2 = baseX + topWidth + (canvasWidth * 0.06), Y2 = baseY - standHeight + (canvasHeight * 0.45), Stroke = Brushes.Black, StrokeThickness = 3 };
+            HangmanCanvas.Children.Add(rightLeg);
+        }
+    }
+
+    private void CanvasSizeChanged(object sender, RoutedEventArgs e)
+    {
+        DrawHangman(stage);
+    }
 }
