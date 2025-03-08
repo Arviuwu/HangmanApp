@@ -70,6 +70,7 @@ public partial class MainWindow : Window
         tbDialogue.Text = dialogueMessage;
         tbWord.Text = word;
         tbxGuessInput.Visibility = Visibility.Visible;
+        Guesshere.Visibility = Visibility.Visible;
         tbguessedLetters.Text = "Guessed letters: ";
         DrawHangman(stage);
     }
@@ -163,6 +164,7 @@ public partial class MainWindow : Window
             {
                 tbDialogue.Text = "You won!";
                 tbxGuessInput.Visibility = Visibility.Hidden;
+                Guesshere.Visibility = Visibility.Hidden;
                 streak++;
                 StreakHandler(streak);
                 Replay();
@@ -171,6 +173,7 @@ public partial class MainWindow : Window
             {
                 tbDialogue.Text = $"You lost. The word was {oldWord}.";
                 tbxGuessInput.Visibility = Visibility.Hidden;
+                Guesshere.Visibility = Visibility.Hidden;
                 streak = 0;
                 StreakHandler(streak);
                 Replay();
