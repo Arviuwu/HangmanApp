@@ -7,9 +7,9 @@
         mc:Ignorable="d"
             
         Title="Hangman" Height="450" Width="800" MinWidth="450" MinHeight="370">
-    
-    <Grid>
-    <Grid Margin="20" >
+
+    <Grid Background="DarkGray">
+    <Grid Margin="20" Background="DarkGray">
         
         <Grid.RowDefinitions>
             
@@ -82,22 +82,26 @@
                                    TextWrapping="Wrap" 
                                    MinHeight="55" 
                                    Width="300"/>
-
-                        <TextBox Name="tbxGuessInput" Grid.Row="4"
+                            <TextBlock Name="Guesshere" Grid.Row="4"
+                                 Margin="10" HorizontalAlignment="Center" 
+                                 Text="Guess here"
+                                 Width="120"  
+                                 TextAlignment="Center" FontSize="20"
+                                 FontWeight="Light" Foreground="DarkGray" Background="White"/>      
+                            <TextBox Name="tbxGuessInput" Grid.Row="4"
                                  Margin="10" HorizontalAlignment="Center" 
                                  KeyDown="tbxGuessInput_KeyDown" 
                                  Width="120"  
-                                 TextAlignment="Center" FontSize="20"/>
-                        
-                    </Grid>
+                                 TextAlignment="Center" FontSize="20"
+                                 FontWeight="Light" SelectionTextBrush="Red" Background="Transparent" TextChanged="tbxGuessInput_TextChanged"   />
+
+                            
+                        </Grid>
                 </Viewbox>
             </Border>
 
                 <Border Grid.Column="1" Background="LightBlue" BorderBrush="Black" BorderThickness="0 0 2 2" CornerRadius="0 10 10 0">
-                    
-
-                        
-                        <Canvas Name="HangmanCanvas" HorizontalAlignment="Stretch" 
+                    <Canvas Name="HangmanCanvas" HorizontalAlignment="Stretch" 
 VerticalAlignment="Stretch" SizeChanged="CanvasSizeChanged"/>
                     
                 </Border>
@@ -115,7 +119,12 @@ VerticalAlignment="Stretch" SizeChanged="CanvasSizeChanged"/>
                 </Border>
         </Grid>
 
-        <TextBlock Name="tbWord" Margin="4"  />
+        <TextBlock Name="tbWord" Margin="4" 
+                   Foreground="Black" Visibility="Hidden"
+                   Grid.Row="1" HorizontalAlignment="Right"/>
+            <TextBlock Name="tbStreak" Margin="4" 
+           Foreground="Black" Visibility="Hidden"
+           Grid.Row="1" HorizontalAlignment="Left" Text="Streak: 0" FontSize="20"/>
             <Border Background="LightGray" BorderBrush="Black" BorderThickness="2 2 2 2" CornerRadius="15 15 15 15">
         <TextBlock Name="Header" 
                    Text="Hangman" 

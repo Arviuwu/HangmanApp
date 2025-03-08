@@ -11,16 +11,26 @@ public partial class MainWindow : Window
     bool open = false; //button visibility switch
     List<char> guessedLetters = new List<char>(); // empty list of wrongly guessed characters
     string[] wordList = new string[] // list of possible words
-    {
-        "Apple", "Tiger", "River", "Mountain", "Puzzle",
-        "Chair", "Cloud", "Bottle", "School", "Flower",
-        "Window", "Pencil", "Garden", "Rocket", "Banana",
-        "Orange", "House", "Bread", "Table", "Friend",
-        "Dog", "Sun", "Tree", "Bridge", "Candle",
-        "Laptop", "Forest", "Village", "Thunder", "Rainbow",
-        "Notebook", "Backpack", "Sandwich", "Adventure", "Chocolate",
-        "Morning", "Pebble", "Castle", "Guitar", "Universe"
-    };
+{
+    "Apple", "Tiger", "River", "Mountain", "Puzzle",
+    "Chair", "Cloud", "Bottle", "School", "Flower",
+    "Window", "Pencil", "Garden", "Rocket", "Banana",
+    "Orange", "House", "Bread", "Table", "Friend",
+    "Dog", "Sun", "Tree", "Bridge", "Candle",
+    "Laptop", "Forest", "Village", "Thunder", "Rainbow",
+    "Notebook", "Backpack", "Sandwich", "Adventure", "Chocolate",
+    "Morning", "Pebble", "Castle", "Guitar", "Universe",
+    "Meadow", "Jungle", "Lantern", "Diamond", "Picture",
+    "Parrot", "Balloon", "Mailbox", "Harbor", "Planet",
+    "Fountain", "Coconut", "Whistle", "Compass", "Festival",
+    "Library", "Tornado", "Sunset", "Luggage", "Carousel",
+    "Voyage", "Gateway", "Fortune", "Meadow", "Painting",
+    "Chimney", "Octopus", "Firefly", "Cottage", "Snowflake",
+    "Windmill", "Backyard", "Treasure", "Icicle", "Blossom",
+    "Lantern", "Seagull", "Volcano", "Cabbage", "Sparrow",
+    "Marbles", "Velvet", "Picnic", "Cushion", "Courage",
+    "Jigsaw", "Bracelet", "Trophy", "Postcard", "Lullaby"
+};
     string guess = "";
     char letterGuess = '\0';
     int lives = 7;
@@ -31,6 +41,7 @@ public partial class MainWindow : Window
     char[] wordArray;
     string dialogueMessage;
     int stage = 0;
+    int streak = 0;
 
     public MainWindow()
     {
@@ -48,7 +59,7 @@ public partial class MainWindow : Window
         wordArray = word.ToCharArray(); // word converted to array with characters
         oldWord = word; // store word for loss message
         stage = 0;
-        dialogueMessage = "Take your guess!";
+        dialogueMessage = "";
         // create guess display array with blanks
         for (int i = 0; i < wordArray.Length; i++)
         {
@@ -60,6 +71,7 @@ public partial class MainWindow : Window
         tbWord.Text = word;
         tbxGuessInput.Visibility = Visibility.Visible;
         tbguessedLetters.Text = "Guessed letters: ";
+        DrawHangman(stage);
     }
     static string RandomWord(string[] wordList, Random random)
     {
@@ -72,6 +84,18 @@ public partial class MainWindow : Window
         if (e.Key == Key.Enter)
         {
             guess = tbxGuessInput.Text.ToUpper();
+            if(guess == "CHEATSON")
+            {
+                tbWord.Visibility = Visibility.Visible;
+                tbxGuessInput.Clear();
+                return;
+            }
+            else if(guess == "CHEATSOFF")
+            {
+                tbWord.Visibility = Visibility.Hidden;
+                tbxGuessInput.Clear();
+                return;
+            }
             if (!String.IsNullOrEmpty(guess))
             {
                 letterGuess = guess[0]; //assigns the first character of the input to the letter guess variable
@@ -139,12 +163,16 @@ public partial class MainWindow : Window
             {
                 tbDialogue.Text = "You won!";
                 tbxGuessInput.Visibility = Visibility.Hidden;
+                streak++;
+                StreakHandler(streak);
                 Replay();
             }
             else if (lives == 0)
             {
                 tbDialogue.Text = $"You lost. The word was {oldWord}.";
                 tbxGuessInput.Visibility = Visibility.Hidden;
+                streak = 0;
+                StreakHandler(streak);
                 Replay();
             }
         }
@@ -245,5 +273,30 @@ public partial class MainWindow : Window
     private void CanvasSizeChanged(object sender, RoutedEventArgs e)
     {
         DrawHangman(stage);
+    }
+
+    private void tbxGuessInput_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (!String.IsNullOrEmpty(tbxGuessInput.Text))
+        {
+            Guesshere.Text = "";
+        }
+        else
+        {
+            Guesshere.Text = "Guess here!";
+        }
+    }
+
+    private void StreakHandler(int streak)
+    {
+        tbStreak.Text = $"Streak: {streak}";
+        if (streak == 0)
+        {
+            tbStreak.Visibility = Visibility.Hidden;
+        }
+        else if (streak > 1)
+        {
+            tbStreak.Visibility = Visibility.Visible;
+        }
     }
 }
